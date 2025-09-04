@@ -1,15 +1,30 @@
 import pygame
+from checkers.constants import WIDTH, HEIGHT
+from checkers.board import Board
+import time
 
-WIDTH, HEIGHT = 800,800
-WIN = pygame.display.set_mode((WIDTH,HEIGHT))
+FPS = 60
+
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Checkers")
 
 def main():
     run = True
+    clock = pygame.time.Clock()
+    board = Board()
+    
     while run:
-        for event in pygame.events.get():
+        clock.tick(FPS)
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                break
+                
+            if event.type == pygame.QUIT:
+                pass
+            
+        board.draw(WIN)
+        pygame.display.update()
             
     pygame.quit()
+    
+main()
