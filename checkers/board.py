@@ -17,8 +17,8 @@ class Board:
                 pygame.draw.rect(win, RED, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
     
     def move(self, piece, row, col):
-        self.board[piece.row][piece.col],self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
-        piece.move(row, col)
+        self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.co]
+        piece.pygame.Rect.move(row, col)
         
         if row == ROWS or row == 0:
             piece.make_king()
@@ -51,3 +51,51 @@ class Board:
                 piece = self.board[row][col]
                 if piece != 0:
                     piece.draw(win)
+
+    def get_valid_moves(self, piece):
+        moves = {}
+        left = piece.col - 1
+        right = piece.col + 1
+        row = piece.row
+        
+        if piece.color == RED or piece.king:
+            moves.update(self._traverse_left(row-1, max(row-3, -1), -1, piece.color, left))
+            moves.update(self._traverse_right(row-1, max(row-3, -1), -1, piece.color, right))
+
+        if piece.color == WHITE or piece.king:
+            moves.update(self._traverse_left(row+1, min(row+3, ROWS), 1, piece.color, left))
+            moves.update(self._traverse_right(row+1, min(row+3, ROWS), 1, piece.color, right))
+
+        return moves
+            
+    def _traverse_left(self, start, stop, step, color, left, skipped=[]):
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if left < 0:
+                break
+
+            current = self.board[r][left]
+            if current == 0:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    pass
+                else:
+                    moves[(r, left)] = last
+
+                if last:
+                    if step == -1:
+                        row = max(r-3, 0)
+                    else:
+                        row = min(r+3, ROWS)
+                        
+            elif current.color == color:
+                break
+            else:
+                last = [current]
+
+            left -= 1
+    
+    def _traverse_right(self, start, stop, step, color, right, skipped=[]):
+        pass
