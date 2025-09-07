@@ -97,6 +97,8 @@ class Board:
             left -= 1
 
     def _traverse_right(self, start, stop, step, color, right, skipped=[]):
+        moves = {}
+        last = []
         pass
 
 
